@@ -5,7 +5,7 @@ module Ciphersurfer
 
     def initialize(options={})
       @host=options[:host]
-      @port=options[:port]
+      @port=options[:port] ||= 443
       @proto=options[:proto]
       @ok_ciphers=[]
       @ko_ciphers=[]
