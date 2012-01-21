@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+#
+$LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + '/../lib'))
+
+require 'ciphersurfer'
+
+if ! Ciphersurfer::Scanner.alive?(ARGV[0], ARGV[1])
+  puts "#{ARGV[0]}@#{ARGV[1]}: connection refused"
+  exit 1
+end
+protocol_version = [:SSLv2, :SSLv3, :TLSv1]
+protocol_version.each do |version|
+  s = Ciphersurfer::Scanner.new({:host=>ARGV[0], :port=>ARGV[1], :proto=>version})
+
+  s.go
+  ok = s.ok_ciphers
+  ko = s.ko_ciphers
+
+  ok.each do |o|
+    puts "[+] Accepted\t #{o[:bits]} bits\t#{o[:name]}"
+  end
+end
+
