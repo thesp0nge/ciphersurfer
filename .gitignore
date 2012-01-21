@@ -3,4 +3,4 @@ coverage
 pkg
 .rvmrc
 *.swp
-
+*.gemspec
