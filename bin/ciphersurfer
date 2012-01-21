@@ -10,6 +10,7 @@ if ! Ciphersurfer::Scanner.alive?(ARGV[0], ARGV[1])
 end
 protocol_version = [:SSLv2, :SSLv3, :TLSv1]
 protocol_version.each do |version|
+  puts version
   s = Ciphersurfer::Scanner.new({:host=>ARGV[0], :port=>ARGV[1], :proto=>version})
 
   s.go
