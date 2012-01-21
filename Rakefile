@@ -22,7 +22,7 @@ Jeweler::Tasks.new do |gem|
   gem.description = %Q{ciphersurfer is a security tool that list enabled ciphers for a secure HTTP connection}
   gem.email = "thesp0nge@gmail.com"
   gem.authors = ["Paolo Perego"]
-  gem.executables = ['bin/ciphersurfer']
+  gem.executables = ['ciphersurfer']
   gem.default_executable = 'ciphersurfer'
   gem.require_path = 'lib'
   # dependencies defined in Gemfile
