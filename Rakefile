@@ -16,11 +16,15 @@ Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
   gem.name = "ciphersurfer"
   gem.homepage = "http://github.com/thesp0nge/ciphersurfer"
-  gem.license = "MIT"
-  gem.summary = %Q{list all enable ciphers}
+  gem.license = "BSD"
+  gem.version = File.read('VERSION')
+  gem.summary = %Q{list all enable ciphers for a given website}
   gem.description = %Q{ciphersurfer is a security tool that list enabled ciphers for a secure HTTP connection}
   gem.email = "thesp0nge@gmail.com"
   gem.authors = ["Paolo Perego"]
+  gem.executables = ['bin/ciphersurfer']
+  gem.default_executable = 'ciphersurfer'
+  gem.require_path = 'lib'
   # dependencies defined in Gemfile
 end
 Jeweler::RubygemsDotOrgTasks.new
