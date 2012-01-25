@@ -1,3 +1,3 @@
 require 'ciphersurfer/scanner'
 require 'ciphersurfer/version'
-require 'ciphersurfer/net_http'
+# require 'ciphersurfer/net_http'

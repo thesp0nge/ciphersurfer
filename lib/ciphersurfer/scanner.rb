@@ -1,3 +1,6 @@
+require 'net/https'
+require 'openssl'
+
 module Ciphersurfer
   class Scanner
     
@@ -25,13 +28,13 @@ module Ciphersurfer
       end
     end
     def go
-      cipher_set = OpenSSL::SSL::SSLContext.new(@proto).ciphers
+      context=OpenSSL::SSL::SSLContext.new(@proto)
+      cipher_set = context.ciphers
       cipher_set.each do |cipher_name, cipher_version, bits, algorithm_bits|
         request = Net::HTTP.new(@host, @port)
         request.use_ssl = true
-        request.set_context = @proto
         request.verify_mode = OpenSSL::SSL::VERIFY_NONE
-        request.ciphers = cipher_name
+        request.ciphers= cipher_name
         begin
           response = request.get("/")
           @ok_ciphers << {:bits=>bits, :name=>cipher_name}
