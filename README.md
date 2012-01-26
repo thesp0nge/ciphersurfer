@@ -4,9 +4,19 @@ ciphersurfer is a tool to enumerate a website for ciphers it supports. It can
 be used for testing pourposes and to evaluate te security configuration for an
 SSL configured web server.
 
+## Installing ciphersurfer
+
+Installing ciphersurfer is easy. Just follow the standard ruby gem way:
+
+  gem install ciphersurfer
+
+Now you've got a ciphersurfer executable you can invoke using your command line.
+
+
 ## OWASP Testing guide 
 
-ciphersurfer goal is to make tests described in the [Owasp Testing guide](https://www.owasp.org/index.php/Testing_for_SSL-TLS_(OWASP-CM-001))
+ciphersurfer goal is to make tests described in the [Owasp Testing
+guide](https://www.owasp.org/index.php/Testing_for_SSL-TLS_(OWASP-CM-001\))
 
 
 ## Contributing to ciphersurfer

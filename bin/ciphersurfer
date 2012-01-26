@@ -1,24 +1,80 @@
 #!/usr/bin/env ruby
-#
-$LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + '/../lib'))
-
 require 'ciphersurfer'
+require 'rainbow'
+require 'awesome_print'
+require 'progressbar'
+require 'getoptlong'
+require 'json'
 
-if ! Ciphersurfer::Scanner.alive?(ARGV[0], ARGV[1])
-  puts "#{ARGV[0]}@#{ARGV[1]}: connection refused"
-  exit 1
-end
-protocol_version = [:SSLv2, :SSLv3, :TLSv1]
-protocol_version.each do |version|
-  puts version
-  s = Ciphersurfer::Scanner.new({:host=>ARGV[0], :port=>ARGV[1], :proto=>version})
+opts = GetoptLong.new(
+  [ '--help', '-h', GetoptLong::NO_ARGUMENT ],
+  [ '--version', '-v', GetoptLong::NO_ARGUMENT ],
+  [ '--list-ciphers', '-l', GetoptLong::NO_ARGUMENT ]#,
+  # [ '--json', '-j', GetoptLong::NO_ARGUMENT]
+)
 
-  s.go
-  ok = s.ok_ciphers
-  ko = s.ko_ciphers
+options={:json=>false,:list_ciphers=>false}
 
-  ok.each do |o|
-    puts "[+] Accepted\t #{o[:bits]} bits\t#{o[:name]}"
+opts.each do |opt, arg|
+  case opt
+  when '--help'
+    ap "usage: ciphersurfer [-ljvh] server[:port]"
+    ap "       -l: lists supported ciphers instead of just evaluate the security level"
+    # ap "       -j: formats the output using JSON"
+    ap "       -v: shows  version"
+    ap "       -h: this help"
+    exit 0
+  when '--version'
+    ap "ciphersurfer " + Ciphersurfer::Version.version[:string]
+    exit 0
+  # unsupported right now...
+  #when '--json'
+  #  options[:json]=true
+  when '--list-ciphers'
+    options[:list_ciphers]=true
   end
 end
+
+if ( ARGV.length != 1 )
+  ap 'ciphersurfer: missing target'
+  exit -1
+end
+
+target = ARGV.shift
+host = target.split(':')[0] ||= "localhost"   #fallback here should never occur... however it's better to be paranoid
+port = target.split(':')[1] ||= 443           # more common here
+
+ap "scanning #{host}:#{port} for supported ciphers"
+
+if ! Ciphersurfer::Scanner.alive?(host, port)
+  ap "it seems there is no server listening @#{host}:#{port}"
+  exit -2 
+end
+
+protocol_version = [:SSLv2, :SSLv3, :TLSv1]
+
+ok = {}
+evaluation = {}
+
+protocol_version.each do |version|
+  puts version
+  s = Ciphersurfer::Scanner.new({:host=>host, :port=>port, :proto=>version})
+
+  s.go
+  if (version == :SSLv2) && (s.ok_ciphers.size!= 0)
+    evaluation[:sslv2]=true
+  end
+  ok << {:proto=>version, :ciphers=>s.ok_ciphers}
+
+  end
+
+if evaluation[:SSLv2]
+    ap "ciphersurfer: SSLv2 enabled on target host."
+end
+
+# if options[:list_ciphers] 
+#     ok.each do |o|
+#       puts "[+] Accepted\\t #{o[:bits]} bits\\t#{o[:name]}"
+#     end
+#   end
 

@@ -1,4 +1,10 @@
 source "http://rubygems.org"
+
+gem 'rainbow'
+gem 'progressbar'
+gem "awesome_print"
+gem 'json'
+
 # Add dependencies required to use your gem here.
 # Example:
 #   gem "activesupport", ">= 2.3.5"

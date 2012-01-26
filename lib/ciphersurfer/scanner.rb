@@ -4,14 +4,13 @@ require 'openssl'
 module Ciphersurfer
   class Scanner
     
-    attr_reader :ok_ciphers, :ko_ciphers
+    attr_reader :ok_ciphers
 
     def initialize(options={})
       @host=options[:host]
       @port=options[:port] ||= 443
       @proto=options[:proto]
       @ok_ciphers=[]
-      @ko_ciphers=[]
     end
 
     def self.alive?(host, port)
@@ -39,9 +38,11 @@ module Ciphersurfer
           response = request.get("/")
           @ok_ciphers << {:bits=>bits, :name=>cipher_name}
         rescue OpenSSL::SSL::SSLError => e
-          @ko_ciphers << {:bits=>bits, :name=>cipher_name}
+          # Quietly discard SSLErrors, really I don't care if the cipher has
+          # not been accepted
         rescue 
-          # Quietly discard all other errors... you must perform all error chekcs in the calling program
+          # Quietly discard all other errors... you must perform all error
+          # chekcs in the calling program
         end
       end
     end
