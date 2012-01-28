@@ -26,6 +26,7 @@ module Ciphersurfer
         return false
       end
     end
+   
     def go
       context=OpenSSL::SSL::SSLContext.new(@proto)
       cipher_set = context.ciphers

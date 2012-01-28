@@ -64,6 +64,7 @@ protocol_version.each do |version|
   if (version == :SSLv2) && (s.ok_ciphers.size!= 0)
     evaluation[:sslv2]=true
   end
+  
   ok << {:proto=>version, :ciphers=>s.ok_ciphers}
 
   end

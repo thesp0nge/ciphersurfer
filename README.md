@@ -12,6 +12,11 @@ Installing ciphersurfer is easy. Just follow the standard ruby gem way:
 
 Now you've got a ciphersurfer executable you can invoke using your command line.
 
+## SSLabs
+
+For the SSL security evaluation, we use [SSLabs
+document](https://www.ssllabs.com/downloads/SSL_Server_Rating_Guide_2009.pdf)
+as reference.
 
 ## OWASP Testing guide 
 
