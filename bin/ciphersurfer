@@ -51,27 +51,47 @@ if ! Ciphersurfer::Scanner.alive?(host, port)
   exit -2 
 end
 
-protocol_version = [:SSLv2, :SSLv3, :TLSv1, :TLSv11, :TLSv12]
+protocol_version = [:SSLv2, :SSLv3, :TLSv1]#, :TLSv11, :TLSv12]
 
-ok = {}
-evaluation = {}
+# ok = {}
+supported_protocols = []
+cipher_bits=[]
+
+
 
 protocol_version.each do |version|
-  puts version
   s = Ciphersurfer::Scanner.new({:host=>host, :port=>port, :proto=>version})
 
   s.go
-  if (version == :SSLv2) && (s.ok_ciphers.size!= 0)
-    evaluation[:sslv2]=true
+  if (s.ok_ciphers.size != 0)
+    supported_protocols << version
+    cipher_bits = cipher_bits | s.ok_bits
   end
   
-  ok << {:proto=>version, :ciphers=>s.ok_ciphers}
+  # ok << {:proto=>version, :ciphers=>s.ok_ciphers}
 
-  end
-
-if evaluation[:SSLv2]
-    ap "ciphersurfer: SSLv2 enabled on target host."
 end
+
+cert = Ciphersurfer::Scanner.cert(host, port)
+a=cert.public_key.to_text
+key_size=/Modulus \((\d+)/i.match(a)[1]
+                   
+
+                    proto_score= Ciphersurfer::Score.evaluate_protocols(supported_protocols)
+                    cipher_score= Ciphersurfer::Score.evaluate_ciphers(cipher_bits)
+                    key_score= Ciphersurfer::Score.evaluate_key(key_size.to_i)
+score= Ciphersurfer::Score.score(proto_score, key_score, cipher_score)
+ap Ciphersurfer::Score.evaluate(score) + " ("+score.to_s+")"
+
+ap "Protocol support: " + proto_score.to_s
+ap "Key exchange: " + key_score.to_s
+ap "Cipher strength: " + cipher_score.to_s
+
+
+
+
+# e.g. supported_protocols = [:SSLv2, :TLSv1]
+# e.g. cipher_bits = [0, 256, 1024]
 
 # if options[:list_ciphers] 
 #     ok.each do |o|

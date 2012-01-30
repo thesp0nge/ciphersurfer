@@ -4,6 +4,7 @@ gem 'rainbow'
 gem 'progressbar'
 gem "awesome_print"
 gem 'json'
+gem 'httpclient'
 
 # Add dependencies required to use your gem here.
 # Example:

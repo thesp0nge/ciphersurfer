@@ -56,7 +56,7 @@ module Ciphersurfer
           (worst = 100) unless worst != -1
         end
 
-        (best + worst) / 200.0
+        (best + worst) / 2
 
       end
 
@@ -71,7 +71,7 @@ module Ciphersurfer
             worst = 0
             best = 0 unless best != -1
           end
-          if (c <128) && (c!=0)
+          if (c < 128) && (c!=0)
             worst = 20 unless worst < 20
             best = 20 unless best > 20
           end
@@ -87,7 +87,7 @@ module Ciphersurfer
           end
 
         end
-        (best + worst) / 200.0
+        (best + worst) / 2
       end
 
 
@@ -98,20 +98,20 @@ module Ciphersurfer
         when 0
           return 0
         when 1...512
-          return 0.2
+          return 20
         when 512...1024
-          return 0.4
+          return 40
         when 1024...2048
-          return 0.8
+          return 80
         when 2048...4096
-          return 0.9
+          return 90
         else
-          return 1.0
+          return 100
         end
       end
 
-      def self.score(evaluations)
-        return (0.3*evaluations[0] + 0.3*evaluations[1] + 0.4*evaluations[2])
+      def self.score(proto, key, ciphers)
+        return ((0.3*proto) + (0.3*key) + (0.4*ciphers))
       end
     end
 end
