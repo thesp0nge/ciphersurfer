@@ -86,5 +86,46 @@ describe 'Ciphersurfer' do
       Ciphersurfer::Score.evaluate_ciphers([40, 56, 1024, 2048]).should == 0.6
     end 
 
+    it "should give a 0 if no key provided" do
+      Ciphersurfer::Score.evaluate_key(0).should == 0
+    end
+
+    it "should give a 0.2 if key < 512" do
+      Ciphersurfer::Score.evaluate_key(128).should == 0.2
+      Ciphersurfer::Score.evaluate_key(256).should == 0.2
+      Ciphersurfer::Score.evaluate_key(511).should == 0.2
+      Ciphersurfer::Score.evaluate_key(512).should_not == 0.2
+    end
+
+    it "should give a 0.4 if 512 <= key < 1024" do
+      Ciphersurfer::Score.evaluate_key(512).should == 0.4
+      Ciphersurfer::Score.evaluate_key(1000).should == 0.4
+      Ciphersurfer::Score.evaluate_key(1024).should_not == 0.4
+    end
+
+    it "should give a 0.8 if 1024 <= key < 2048" do
+      Ciphersurfer::Score.evaluate_key(1024).should == 0.8
+      Ciphersurfer::Score.evaluate_key(2043).should == 0.8
+      Ciphersurfer::Score.evaluate_key(2048).should_not == 0.8
+    end
+
+    it "should give a 0.9 if 2048 <= key < 4096" do
+      Ciphersurfer::Score.evaluate_key(2048).should == 0.9
+      Ciphersurfer::Score.evaluate_key(4095).should == 0.9
+      Ciphersurfer::Score.evaluate_key(4096).should_not == 0.9
+    end
+
+    it "should give a 1.0 if key >= 4096" do
+      Ciphersurfer::Score.evaluate_key(4096).should == 1.0
+    end
+
+
+    it "should evalute the overall score" do
+      Ciphersurfer::Score.score([1.0, 1.0, 1.0]).should == 1.0
+      Ciphersurfer::Score.score([0, 1.0, 1.0]).should == 0.7
+      Ciphersurfer::Score.score([1.0, 0, 1.0]).should == 0.7
+      Ciphersurfer::Score.score([1.0, 1.0, 0]).should == 0.6
+      Ciphersurfer::Score.score([0, 0, 1.0]).should == 0.4
+    end
   end
 end

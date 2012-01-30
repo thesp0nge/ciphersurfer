@@ -89,5 +89,29 @@ module Ciphersurfer
         end
         (best + worst) / 200.0
       end
+
+
+      # FIXME: How can I test Weak key (Debian OpenSSL flaw)?
+      # FIXME: Evaluate if "Exportable key exchange limited to 512 bits is fully covered in k_len<1024
+      def self.evaluate_key(key_length)
+        case (key_length)
+        when 0
+          return 0
+        when 1...512
+          return 0.2
+        when 512...1024
+          return 0.4
+        when 1024...2048
+          return 0.8
+        when 2048...4096
+          return 0.9
+        else
+          return 1.0
+        end
+      end
+
+      def self.score(evaluations)
+        return (0.3*evaluations[0] + 0.3*evaluations[1] + 0.4*evaluations[2])
+      end
     end
 end
