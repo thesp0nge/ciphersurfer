@@ -8,7 +8,9 @@ SSL configured web server.
 
 Installing ciphersurfer is easy. Just follow the standard ruby gem way:
 
-  gem install ciphersurfer
+```
+gem install ciphersurfer
+```
 
 Now you've got a ciphersurfer executable you can invoke using your command line.
 
