@@ -36,7 +36,7 @@ opts.each do |opt, arg|
     puts "       -h: this help"
     exit 0
   when '--version'
-    puts "ciphersurfer " + Ciphersurfer::Version.version[:number]
+    puts "ciphersurfer " + Ciphersurfer::Version::STRING
     exit 0
   when '--json'
     options[:json]=true

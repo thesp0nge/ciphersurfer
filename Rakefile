@@ -12,12 +12,16 @@ end
 require 'rake'
 
 require 'jeweler'
+require './lib/ciphersurfer/version'
+
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
   gem.name = "ciphersurfer"
   gem.homepage = "http://github.com/thesp0nge/ciphersurfer"
   gem.license = "BSD"
-  gem.version = File.read('VERSION')
+  gem.version = Ciphersurfer::Version::STRING 
+  File.open('VERSION', 'w') {|f| f.write(Ciphersurfer::Version::STRING) }
+
   gem.summary = %Q{evaluates web server SSL configuration}
   gem.description = %Q{ciphersurfer is a security tool that evaluates web server SSL configuration}
   gem.email = "thesp0nge@gmail.com"
