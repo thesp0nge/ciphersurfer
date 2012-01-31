@@ -19,7 +19,7 @@ module Ciphersurfer
     end
 
     def self.cert(host, port)
-      if (! alive)
+      if (! @alive)
         self.alive?(host.port)
       end
 
@@ -33,6 +33,7 @@ module Ciphersurfer
     def self.alive?(host, port)
       client=HTTPClient.new
       begin
+        @alive=true
         response=client.get("https://#{host}:#{port}")
         peer_cert = response.peer_cert
         return true

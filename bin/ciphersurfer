@@ -44,19 +44,17 @@ target = ARGV.shift
 host = target.split(':')[0] ||= "localhost"   #fallback here should never occur... however it's better to be paranoid
 port = target.split(':')[1] ||= 443           # more common here
 
-ap "scanning #{host}:#{port} for supported ciphers"
+ap "Evaluating secure communication with #{host}:#{port}"
 
 if ! Ciphersurfer::Scanner.alive?(host, port)
-  ap "it seems there is no server listening @#{host}:#{port}"
   exit -2 
 end
 
 protocol_version = [:SSLv2, :SSLv3, :TLSv1]#, :TLSv11, :TLSv12]
 
-# ok = {}
 supported_protocols = []
 cipher_bits=[]
-
+ciphers=[]
 
 
 protocol_version.each do |version|
@@ -66,36 +64,29 @@ protocol_version.each do |version|
   if (s.ok_ciphers.size != 0)
     supported_protocols << version
     cipher_bits = cipher_bits | s.ok_bits
+    ciphers = ciphers | s.ok_ciphers
   end
   
-  # ok << {:proto=>version, :ciphers=>s.ok_ciphers}
-
 end
 
-cert = Ciphersurfer::Scanner.cert(host, port)
+if (options[:list_ciphers])
+  ciphers.each do |c|
+    ap "[+] accepted\\t #{c}"
+  end
+  exit 0
+end
+
+cert= Ciphersurfer::Scanner.cert(host, port)
 a=cert.public_key.to_text
 key_size=/Modulus \((\d+)/i.match(a)[1]
                    
 
-                    proto_score= Ciphersurfer::Score.evaluate_protocols(supported_protocols)
-                    cipher_score= Ciphersurfer::Score.evaluate_ciphers(cipher_bits)
-                    key_score= Ciphersurfer::Score.evaluate_key(key_size.to_i)
-score= Ciphersurfer::Score.score(proto_score, key_score, cipher_score)
-ap Ciphersurfer::Score.evaluate(score) + " ("+score.to_s+")"
+proto_score=  Ciphersurfer::Score.evaluate_protocols(supported_protocols)
+cipher_score= Ciphersurfer::Score.evaluate_ciphers(cipher_bits)
+key_score=    Ciphersurfer::Score.evaluate_key(key_size.to_i)
+score=        Ciphersurfer::Score.score(proto_score, key_score, cipher_score)
 
+ap Ciphersurfer::Score.evaluate(score) + " ("+score.to_s+")"
 ap "Protocol support: " + proto_score.to_s
 ap "Key exchange: " + key_score.to_s
 ap "Cipher strength: " + cipher_score.to_s
-
-
-
-
-# e.g. supported_protocols = [:SSLv2, :TLSv1]
-# e.g. cipher_bits = [0, 256, 1024]
-
-# if options[:list_ciphers] 
-#     ok.each do |o|
-#       puts "[+] Accepted\\t #{o[:bits]} bits\\t#{o[:name]}"
-#     end
-#   end
-
