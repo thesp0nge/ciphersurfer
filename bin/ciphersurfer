@@ -22,7 +22,7 @@ opts = GetoptLong.new(
   [ '--list-ciphers', '-l', GetoptLong::NO_ARGUMENT ],
   [ '--json', '-j', GetoptLong::NO_ARGUMENT]
 )
-trap("INT") { puts '['+'INTERRUPTED'.red+']'; exit -1 }
+trap("INT") { puts '['+'INTERRUPTED'.color(:red)+']'; exit -1 }
 
 options={:json=>false,:list_ciphers=>false}
 

@@ -40,7 +40,7 @@ module Ciphersurfer
         @peer_cert = response.peer_cert
         return true
       rescue => e
-        ap "alive?(): " + e.message
+        puts "alive?(): #{e.message}".color(:red)
         return false
       end
       
