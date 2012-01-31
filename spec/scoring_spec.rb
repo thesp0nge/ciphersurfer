@@ -40,22 +40,22 @@ describe 'Ciphersurfer' do
     end
 
     it "should give a 0.5 if both SSLv2 and SSLv3 are supported but no TLS" do
-      Ciphersurfer::Score.evaluate_protocols([:SSLv2, :SSLv3]).should == 0.5
+      Ciphersurfer::Score.evaluate_protocols([:SSLv2, :SSLv3]).should == 50
     end
     it "should give a 0.2 if only SSLv2 protocol is supported" do
-      Ciphersurfer::Score.evaluate_protocols([:SSLv2]).should == 0.2
+      Ciphersurfer::Score.evaluate_protocols([:SSLv2]).should == 20
     end
 
     it "should give a 0.55 if SSLv2 and TLSv1 are supported but no SSLv3" do
-      Ciphersurfer::Score.evaluate_protocols([:SSLv2, :TLSv1]).should == 0.55
+      Ciphersurfer::Score.evaluate_protocols([:SSLv2, :TLSv1]).should == 55
     end
 
     it "should give a 0.55 if SSLv2, SSLv3 and TLSv1 are supported" do
-      Ciphersurfer::Score.evaluate_protocols([:SSLv2, :SSLv3, :TLSv1]).should == 0.55
+      Ciphersurfer::Score.evaluate_protocols([:SSLv2, :SSLv3, :TLSv1]).should == 55
     end
 
     it "should give a 1 if only TLSv1.2 is supported" do
-      Ciphersurfer::Score.evaluate_protocols([:TLSv12]).should == 1.0
+      Ciphersurfer::Score.evaluate_protocols([:TLSv12]).should == 100
     end
 
     it "should give a 0 if cipher has 0 length" do
@@ -63,27 +63,27 @@ describe 'Ciphersurfer' do
     end 
 
     it "should give a 0.2 if ciphers supported have length < 128" do 
-      Ciphersurfer::Score.evaluate_ciphers([40, 56, 64]).should == 0.2
+      Ciphersurfer::Score.evaluate_ciphers([40, 56, 64]).should == 20
     end 
 
     it "should give a 0.8 if ciphers supported have length < 256" do 
-      Ciphersurfer::Score.evaluate_ciphers([128, 168, 255]).should == 0.8
+      Ciphersurfer::Score.evaluate_ciphers([128, 168, 255]).should == 80
     end 
 
     it "should give a 1.0 if ciphers supported have length >= 256" do 
-      Ciphersurfer::Score.evaluate_ciphers([256, 512, 2048]).should == 1.0
+      Ciphersurfer::Score.evaluate_ciphers([256, 512, 2048]).should == 100
     end 
 
     it "should give 0.1 if no encryption or ciphers lenght < 128" do
-      Ciphersurfer::Score.evaluate_ciphers([0, 40, 56, 64]).should == 0.1
+      Ciphersurfer::Score.evaluate_ciphers([0, 40, 56, 64]).should == 10
     end
 
     it "should give a 0.5 if ciphers supported have length < 256 and < 128" do 
-      Ciphersurfer::Score.evaluate_ciphers([40, 56, 128, 168, 255]).should == 0.5
+      Ciphersurfer::Score.evaluate_ciphers([40, 56, 128, 168, 255]).should == 50
     end 
 
     it "should give a 0.6 if ciphers supported have length >= 256 and < 128" do 
-      Ciphersurfer::Score.evaluate_ciphers([40, 56, 1024, 2048]).should == 0.6
+      Ciphersurfer::Score.evaluate_ciphers([40, 56, 1024, 2048]).should == 60
     end 
 
     it "should give a 0 if no key provided" do
@@ -91,41 +91,41 @@ describe 'Ciphersurfer' do
     end
 
     it "should give a 0.2 if key < 512" do
-      Ciphersurfer::Score.evaluate_key(128).should == 0.2
-      Ciphersurfer::Score.evaluate_key(256).should == 0.2
-      Ciphersurfer::Score.evaluate_key(511).should == 0.2
-      Ciphersurfer::Score.evaluate_key(512).should_not == 0.2
+      Ciphersurfer::Score.evaluate_key(128).should == 20
+      Ciphersurfer::Score.evaluate_key(256).should == 20
+      Ciphersurfer::Score.evaluate_key(511).should == 20
+      Ciphersurfer::Score.evaluate_key(512).should_not == 20
     end
 
     it "should give a 0.4 if 512 <= key < 1024" do
-      Ciphersurfer::Score.evaluate_key(512).should == 0.4
-      Ciphersurfer::Score.evaluate_key(1000).should == 0.4
-      Ciphersurfer::Score.evaluate_key(1024).should_not == 0.4
+      Ciphersurfer::Score.evaluate_key(512).should == 40
+      Ciphersurfer::Score.evaluate_key(1000).should == 40
+      Ciphersurfer::Score.evaluate_key(1024).should_not == 40
     end
 
     it "should give a 0.8 if 1024 <= key < 2048" do
-      Ciphersurfer::Score.evaluate_key(1024).should == 0.8
-      Ciphersurfer::Score.evaluate_key(2043).should == 0.8
-      Ciphersurfer::Score.evaluate_key(2048).should_not == 0.8
+      Ciphersurfer::Score.evaluate_key(1024).should == 80
+      Ciphersurfer::Score.evaluate_key(2043).should == 80
+      Ciphersurfer::Score.evaluate_key(2048).should_not == 80
     end
 
     it "should give a 0.9 if 2048 <= key < 4096" do
-      Ciphersurfer::Score.evaluate_key(2048).should == 0.9
-      Ciphersurfer::Score.evaluate_key(4095).should == 0.9
-      Ciphersurfer::Score.evaluate_key(4096).should_not == 0.9
+      Ciphersurfer::Score.evaluate_key(2048).should == 90
+      Ciphersurfer::Score.evaluate_key(4095).should == 90
+      Ciphersurfer::Score.evaluate_key(4096).should_not == 90
     end
 
     it "should give a 1.0 if key >= 4096" do
-      Ciphersurfer::Score.evaluate_key(4096).should == 1.0
+      Ciphersurfer::Score.evaluate_key(4096).should == 100
     end
 
 
     it "should evalute the overall score" do
-      Ciphersurfer::Score.score([1.0, 1.0, 1.0]).should == 1.0
-      Ciphersurfer::Score.score([0, 1.0, 1.0]).should == 0.7
-      Ciphersurfer::Score.score([1.0, 0, 1.0]).should == 0.7
-      Ciphersurfer::Score.score([1.0, 1.0, 0]).should == 0.6
-      Ciphersurfer::Score.score([0, 0, 1.0]).should == 0.4
+      Ciphersurfer::Score.score(100, 100, 100).should == 100
+      Ciphersurfer::Score.score(0, 100, 100).should == 70
+      Ciphersurfer::Score.score(100, 0, 100).should == 70
+      Ciphersurfer::Score.score(100, 100, 0).should == 60
+      Ciphersurfer::Score.score(0, 0, 100).should == 40
     end
   end
 end
