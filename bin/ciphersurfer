@@ -71,7 +71,7 @@ end
 
 if (options[:list_ciphers])
   ciphers.each do |c|
-    ap "[+] accepted\\t #{c}"
+    ap "[+] accepted #{c}"
   end
   exit 0
 end
