@@ -1,8 +1,6 @@
 source "http://rubygems.org"
 
 gem 'rainbow'
-gem "awesome_print"
-gem 'colored'
 gem 'json'
 gem 'httpclient'
 

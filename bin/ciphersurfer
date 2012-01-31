@@ -1,18 +1,18 @@
 #!/usr/bin/env ruby
-require 'ciphersurfer'
+
 require 'rainbow'
-require 'awesome_print'
+require 'ciphersurfer'
 require 'getoptlong'
 require 'json'
 
 def score_to_color(score)
   case score
   when 1...40
-    return "red"
+    return "red".to_sym
   when 40...80
-    return "yellow"
+    return "yellow".to_sym
   when 80..100
-    return "green"
+    return "green".to_sym
   end
 end
 
@@ -22,7 +22,6 @@ opts = GetoptLong.new(
   [ '--list-ciphers', '-l', GetoptLong::NO_ARGUMENT ]#,
   # [ '--json', '-j', GetoptLong::NO_ARGUMENT]
 )
-
 trap("INT") { puts '['+'INTERRUPTED'.red+']'; exit -1 }
 
 options={:json=>false,:list_ciphers=>false}
@@ -30,14 +29,14 @@ options={:json=>false,:list_ciphers=>false}
 opts.each do |opt, arg|
   case opt
   when '--help'
-    ap "usage: ciphersurfer [-ljvh] server[:port]"
-    ap "       -l: lists supported ciphers instead of just evaluate the security level"
-    # ap "       -j: formats the output using JSON"
-    ap "       -v: shows  version"
-    ap "       -h: this help"
+    puts "usage: ciphersurfer [-ljvh] server[:port]"
+    puts "       -l: lists supported ciphers instead of just evaluate the security level"
+    # puts "       -j: formats the output using JSON"
+    puts "       -v: shows  version"
+    puts "       -h: this help"
     exit 0
   when '--version'
-    ap "ciphersurfer " + Ciphersurfer::Version.version[:string]
+    puts "ciphersurfer " + Ciphersurfer::Version.version[:string]
     exit 0
   # unsupported right now...
   #when '--json'
@@ -48,7 +47,7 @@ opts.each do |opt, arg|
 end
 
 if ( ARGV.length != 1 )
-  ap 'ciphersurfer: missing target'
+  puts 'ciphersurfer: missing target'.red
   exit -1
 end
 
@@ -56,7 +55,7 @@ target = ARGV.shift
 host = target.split(':')[0] ||= "localhost"   #fallback here should never occur... however it's better to be paranoid
 port = target.split(':')[1] ||= 443           # more common here
 
-ap "Evaluating secure communication with #{host}:#{port}"
+puts "Evaluating secure communication with #{host}:#{port}"
 
 if ! Ciphersurfer::Scanner.alive?(host, port)
   exit -2 
@@ -83,7 +82,7 @@ end
 
 if (options[:list_ciphers])
   ciphers.each do |c|
-    ap "[+] accepted #{c}"
+    puts "[+] accepted #{c}".green
   end
   exit 0
 end
