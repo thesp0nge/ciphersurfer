@@ -31,7 +31,7 @@ opts.each do |opt, arg|
   when '--help'
     puts "usage: ciphersurfer [-ljvh] server[:port]"
     puts "       -l: lists supported ciphers instead of just evaluate the security level"
-    # puts "       -j: formats the output using JSON"
+    puts "       -j: formats the output using JSON"
     puts "       -v: shows  version"
     puts "       -h: this help"
     exit 0
@@ -46,7 +46,14 @@ opts.each do |opt, arg|
 end
 
 if ( ARGV.length != 1 )
-  puts 'ciphersurfer: missing target'.red
+  puts 'missing target'.color(:red)
+
+  puts "usage: ciphersurfer [-ljvh] server[:port]"
+  puts "       -l: lists supported ciphers instead of just evaluate the security level"
+  puts "       -j: formats the output using JSON"
+  puts "       -v: shows  version"
+  puts "       -h: this help"
+
   exit -1
 end
 
@@ -76,7 +83,7 @@ protocol_version.each do |version|
     cipher_bits = cipher_bits | s.ok_bits
     ciphers = ciphers | s.ok_ciphers
   end
-  
+
 end
 
 if (options[:list_ciphers])
