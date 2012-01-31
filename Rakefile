@@ -18,8 +18,8 @@ Jeweler::Tasks.new do |gem|
   gem.homepage = "http://github.com/thesp0nge/ciphersurfer"
   gem.license = "BSD"
   gem.version = File.read('VERSION')
-  gem.summary = %Q{list all enable ciphers for a given website}
-  gem.description = %Q{ciphersurfer is a security tool that list enabled ciphers for a secure HTTP connection}
+  gem.summary = %Q{evaluates web server SSL configuration}
+  gem.description = %Q{ciphersurfer is a security tool that evaluates web server SSL configuration}
   gem.email = "thesp0nge@gmail.com"
   gem.authors = ["Paolo Perego"]
   gem.executables = ['ciphersurfer']
