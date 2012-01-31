@@ -37,7 +37,7 @@ module Ciphersurfer
       begin
         @alive=true
         response=client.get("https://#{host}:#{port}")
-        peer_cert = response.peer_cert
+        @peer_cert = response.peer_cert
         return true
       rescue => e
         ap "alive?(): " + e.message

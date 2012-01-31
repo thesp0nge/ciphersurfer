@@ -1,7 +1,6 @@
 source "http://rubygems.org"
 
 gem 'rainbow'
-gem 'progressbar'
 gem "awesome_print"
 gem 'colored'
 gem 'json'

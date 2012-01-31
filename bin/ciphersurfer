@@ -2,9 +2,19 @@
 require 'ciphersurfer'
 require 'rainbow'
 require 'awesome_print'
-require 'progressbar'
 require 'getoptlong'
 require 'json'
+
+def score_to_color(score)
+  case score
+  when 1...40
+    return "red"
+  when 40...80
+    return "yellow"
+  when 80..100
+    return "green"
+  end
+end
 
 opts = GetoptLong.new(
   [ '--help', '-h', GetoptLong::NO_ARGUMENT ],
@@ -14,6 +24,7 @@ opts = GetoptLong.new(
 )
 
 trap("INT") { puts '['+'INTERRUPTED'.red+']'; exit -1 }
+
 options={:json=>false,:list_ciphers=>false}
 
 opts.each do |opt, arg|
@@ -87,7 +98,15 @@ cipher_score= Ciphersurfer::Score.evaluate_ciphers(cipher_bits)
 key_score=    Ciphersurfer::Score.evaluate_key(key_size.to_i)
 score=        Ciphersurfer::Score.score(proto_score, key_score, cipher_score)
 
-ap Ciphersurfer::Score.evaluate(score) + " ("+score.to_s+")"
-ap "Protocol support: " + proto_score.to_s
-ap "Key exchange: " + key_score.to_s
-ap "Cipher strength: " + cipher_score.to_s
+
+printf "%20s : %s (%s)\n", "Overall evaluation", Ciphersurfer::Score.evaluate(score), score.to_s
+printf "%20s : ", "Protocol support" 
+proto_score.to_i.times{print 'o'.color(score_to_color(proto_score))}
+puts ' ('+proto_score.to_s+')'
+printf "%20s : ",  "Key exchange" 
+key_score.to_i.times{print 'o'.color(score_to_color(key_score))}
+puts ' ('+key_score.to_s+')'
+printf "%20s : ", "Cipher strength" 
+cipher_score.to_i.times{print 'o'.color(score_to_color(cipher_score))}
+puts ' ('+cipher_score.to_s+')'
+
