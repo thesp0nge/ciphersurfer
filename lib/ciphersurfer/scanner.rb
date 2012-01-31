@@ -9,6 +9,8 @@ module Ciphersurfer
     attr_reader :ok_ciphers, :ok_bits
     attr_reader :peer_cert
 
+
+
     def initialize(options={})
       @host=options[:host]
       @port=options[:port] ||= 443
