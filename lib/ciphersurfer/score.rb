@@ -1,7 +1,4 @@
 module Ciphersurfer
-    PROTOCOL_SUPPORT_RATIO  = 0.3
-    KEY_EXCHANGE_RATIO      = 0.3
-    CIPHER_STRENGTH         = 0.4
 
     class Score
 
@@ -92,7 +89,6 @@ module Ciphersurfer
 
 
       # FIXME: How can I test Weak key (Debian OpenSSL flaw)?
-      # FIXME: Evaluate if "Exportable key exchange limited to 512 bits is fully covered in k_len<1024
       def self.evaluate_key(key_length)
         case (key_length)
         when 0
