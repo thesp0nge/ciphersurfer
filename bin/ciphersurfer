@@ -67,7 +67,7 @@ if ! Ciphersurfer::Scanner.alive?(host, port)
   exit -2 
 end
 
-protocol_version = [:SSLv2, :SSLv3, :TLSv1]#, :TLSv11, :TLSv12]
+protocol_version= OpenSSL::SSL::SSLContext::METHODS
 
 supported_protocols = []
 cipher_bits=[]
