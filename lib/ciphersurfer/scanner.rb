@@ -3,6 +3,22 @@ require 'openssl'
 require 'httpclient'
 
 
+# if ruby == 1.8 we must extend Net::HTTP this way
+maj=RUBY_VERSION.split('.')[0].to_i
+min=RUBY_VERSION.split('.')[1].to_i
+
+if (maj==1 and min==8)
+  module Net
+    class HTTP
+      def set_context=(value)
+        @ssl_context = OpenSSL::SSL::SSLContext.new
+        @ssl_context &&= OpenSSL::SSL::SSLContext.new(value)
+      end
+      ssl_context_accessor :ciphers
+    end
+  end
+end
+
 module Ciphersurfer
   class Scanner
     

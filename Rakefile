@@ -25,7 +25,7 @@ Jeweler::Tasks.new do |gem|
   gem.summary = %Q{evaluates web server SSL configuration}
   gem.description = %Q{ciphersurfer is a security tool that evaluates web server SSL configuration}
   gem.email = "thesp0nge@gmail.com"
-  gem.required_ruby_version = '>= 1.9.2'
+  gem.required_ruby_version = '>= 1.8.7'
   gem.authors = ["Paolo Perego"]
   gem.executables = ['ciphersurfer']
   gem.default_executable = 'ciphersurfer'
