@@ -94,6 +94,24 @@ $ ciphersurfer -l gmail.com
 "[+] accepted RC4-SHA"
 ``` 
 
+## Certificate signin request support
+
+This is an aside feature I wanted to introduce if you have to inspect a CSR
+file. The idea here is to help sysadmin to understand with their certificate is
+invalid starting from the very beginning, the Certificate Signin Request.
+
+This feature usage is easy. Just do this:
+
+```
+$ ciphersurfer --csr your_csr.csr
+   CN : a_cn
+    O : your_organization
+    C : IT
+   ST : Milan
+    L : Milan
+CSR is valid
+```
+
 ## Some theory behind ciphersurfer
 
 ### SSLabs

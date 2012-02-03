@@ -20,11 +20,12 @@ opts = GetoptLong.new(
   [ '--help', '-h', GetoptLong::NO_ARGUMENT ],
   [ '--version', '-v', GetoptLong::NO_ARGUMENT ],
   [ '--list-ciphers', '-l', GetoptLong::NO_ARGUMENT ],
-  [ '--json', '-j', GetoptLong::NO_ARGUMENT]
+  [ '--json', '-j', GetoptLong::NO_ARGUMENT], 
+  [ '--csr', '-c', GetoptLong::REQUIRED_ARGUMENT]
 )
 trap("INT") { puts '['+'INTERRUPTED'.color(:red)+']'; exit -1 }
 
-options={:json=>false,:list_ciphers=>false}
+options={:json=>false,:list_ciphers=>false, :csr_validation=>false}
 
 opts.each do |opt, arg|
   case opt
@@ -34,6 +35,9 @@ opts.each do |opt, arg|
     puts "       -j: formats the output using JSON"
     puts "       -v: shows  version"
     puts "       -h: this help"
+
+    puts "usage: ciphersurfer [-c] csr_file"
+    puts "       -c: validates a CSR dumping information contained"
     exit 0
   when '--version'
     puts "ciphersurfer " + Ciphersurfer::Version::STRING
@@ -42,10 +46,13 @@ opts.each do |opt, arg|
     options[:json]=true
   when '--list-ciphers'
     options[:list_ciphers]=true
+  when '--csr'
+    options[:csr_validation]=true
+    @csr_file = arg
   end
 end
 
-if ( ARGV.length != 1 )
+if ( ARGV.length != 1 ) && ! options[:csr_validation]
   puts 'missing target'.color(:red)
 
   puts "usage: ciphersurfer [-ljvh] server[:port]"
@@ -54,7 +61,27 @@ if ( ARGV.length != 1 )
   puts "       -v: shows  version"
   puts "       -h: this help"
 
+  puts "usage: ciphersurfer [-c] csr_file"
+  puts "       -c: validates a CSR dumping information contained"
+
   exit -1
+end
+
+
+if (options[:csr_validation])
+  if ! File.exists?(@csr_file)
+    puts "#{@csr_file} does not exists".color(:red)
+    exit -1
+  end
+
+  Ciphersurfer::CsrValidator.dump(@csr_file)
+  if (Ciphersurfer::CsrValidator.valid?(@csr_file))
+    puts "CSR is valid".color(:green)
+  else 
+    puts "CSR is invalid".color(:red)
+  end
+
+  exit 0
 end
 
 target = ARGV.shift
