@@ -36,7 +36,7 @@ opts = GetoptLong.new(
 
 trap("INT") { puts '['+'INTERRUPTED'.color(:red)+']'; exit -1 }
 
-options={:json=>false,:list_ciphers=>false}
+options={:json=>false,:list_ciphers=>false, :html=>false}
 
 opts.each do |opt, arg|
   case opt
@@ -50,12 +50,19 @@ opts.each do |opt, arg|
     options[:json]=true
   when '--list-ciphers'
     options[:list_ciphers]=true
+  when '--help'
+    options[:html]=true
   end
 end
 
 if ( ARGV.length != 1 )
   puts 'missing target'.color(:red)
+  help
+  exit -1
+end
 
+if (options[:json] and options[:html])
+  puts 'you can not request output in JSON format *and* in HTML format. You must choose one'.color(:red)
   help
   exit -1
 end
