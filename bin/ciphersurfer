@@ -16,12 +16,24 @@ def score_to_color(score)
   end
 end
 
+def help
+  puts "usage: ciphersurfer [-ljvh] server[:port]"
+  puts "       -l: lists supported ciphers instead of just evaluate the security level"
+  puts "       -j: formats the output using JSON"
+  puts "       -H: formats the output using HTML"
+  puts "       -v: shows  version"
+  puts "       -h: this help"
+
+end
+
 opts = GetoptLong.new(
   [ '--help', '-h', GetoptLong::NO_ARGUMENT ],
   [ '--version', '-v', GetoptLong::NO_ARGUMENT ],
   [ '--list-ciphers', '-l', GetoptLong::NO_ARGUMENT ],
-  [ '--json', '-j', GetoptLong::NO_ARGUMENT]
+  [ '--json', '-j', GetoptLong::NO_ARGUMENT],
+  [ '--html', '-H', GetoptLong::NO_ARGUMENT]
 )
+
 trap("INT") { puts '['+'INTERRUPTED'.color(:red)+']'; exit -1 }
 
 options={:json=>false,:list_ciphers=>false}
@@ -29,11 +41,7 @@ options={:json=>false,:list_ciphers=>false}
 opts.each do |opt, arg|
   case opt
   when '--help'
-    puts "usage: ciphersurfer [-ljvh] server[:port]"
-    puts "       -l: lists supported ciphers instead of just evaluate the security level"
-    puts "       -j: formats the output using JSON"
-    puts "       -v: shows  version"
-    puts "       -h: this help"
+    help
     exit 0
   when '--version'
     puts "ciphersurfer " + Ciphersurfer::Version::STRING
@@ -48,12 +56,7 @@ end
 if ( ARGV.length != 1 )
   puts 'missing target'.color(:red)
 
-  puts "usage: ciphersurfer [-ljvh] server[:port]"
-  puts "       -l: lists supported ciphers instead of just evaluate the security level"
-  puts "       -j: formats the output using JSON"
-  puts "       -v: shows  version"
-  puts "       -h: this help"
-
+  help
   exit -1
 end
 
