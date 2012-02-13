@@ -55,6 +55,12 @@ module Ciphersurfer
         response=client.get("https://#{host}:#{port}")
         @peer_cert = response.peer_cert
         return true
+      rescue Errno::ECONNREFUSED => e
+        puts "alive?(): connection refused".color(:red)
+        return false
+      rescue OpenSSL::SSL::SSLError => e
+        puts "alive?(): [WARNING] - #{e.message}".color(:yellow)
+        return true
       rescue => e
         puts "alive?(): #{e.message}".color(:red)
         return false
