@@ -108,8 +108,8 @@ if (options[:list_ciphers])
 end
 
 cert= Ciphersurfer::Scanner.cert(host, port)
-if ! cert.nil?
-  a=cert.public_key.to_text
+i ||= ""f ! cert.nil?
+  a=cert.public_key.to_text ||= ""
   key_size=/Modulus \((\d+)/i.match(a)[1]
 else
   puts "warning: the server didn't give us the certificate".color(:yellow)
