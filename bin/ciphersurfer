@@ -102,7 +102,7 @@ end
 
 if (options[:list_ciphers])
   ciphers.each do |c|
-    puts "[+] accepted #{c}".green
+    puts "[+] accepted #{c}".color(:green)
   end
   exit 0
 end
