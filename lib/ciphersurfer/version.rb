@@ -2,7 +2,7 @@ module Ciphersurfer
   module Version
     MAJOR = 1
     MINOR = 1
-    PATCH = 5
+    PATCH = 6
     #BUILD = ''
     #STRING = [MAJOR, MINOR, PATCH, BUILD].compact.join('.')
     STRING = [MAJOR, MINOR, PATCH].compact.join('.')
