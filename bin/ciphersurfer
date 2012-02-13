@@ -21,6 +21,7 @@ def help
   puts "       -l: lists supported ciphers instead of just evaluate the security level"
   puts "       -j: formats the output using JSON"
   puts "       -H: formats the output using HTML"
+  puts "       -C: formats the output using CSV"
   puts "       -v: shows  version"
   puts "       -h: this help"
 
@@ -31,12 +32,13 @@ opts = GetoptLong.new(
   [ '--version', '-v', GetoptLong::NO_ARGUMENT ],
   [ '--list-ciphers', '-l', GetoptLong::NO_ARGUMENT ],
   [ '--json', '-j', GetoptLong::NO_ARGUMENT],
-  [ '--html', '-H', GetoptLong::NO_ARGUMENT]
+  [ '--html', '-H', GetoptLong::NO_ARGUMENT], 
+  [ '--csv', '-C', GetoptLong::NO_ARGUMENT]
 )
 
 trap("INT") { puts '['+'INTERRUPTED'.color(:red)+']'; exit -1 }
 
-options={:json=>false,:list_ciphers=>false, :html=>false}
+options={:json=>false,:list_ciphers=>false, :csv=>false, :html=>false}
 
 opts.each do |opt, arg|
   case opt
@@ -52,6 +54,8 @@ opts.each do |opt, arg|
     options[:list_ciphers]=true
   when '--help'
     options[:html]=true
+  when '--csv'
+    options[:csv]=true
   end
 end
 
@@ -125,13 +129,19 @@ if (options[:json])
   exit 0
 end
 
+if (options[:csv])
+  a="Overall Evaluation,Protocol support,Key exchange, Cipher strength\n#{Ciphersurfer::Score.evaluate(score)}, #{proto_score.to_s}, #{key_score.to_s}, #{cipher_score.to_s}\n"
+  puts a
+  exit 0
+end
+
 if (options[:html])
   html_output = "<!doctype html><html><head><title>SSL evaluation for #{target}</title></head>"
   html_output += "<body>"
   html_output += "<table>"
   html_output += "<tr><td>Overall evaluation</td><td>#{Ciphersurfer::Score.evaluate(score)}</td></tr>"
   html_output += "<tr><td>Protocol support</td><td>#{proto_score.to_s}</td></tr>"
-  html_output += "<tr><td>Key exchange</td><td>#{ket_score.to_s}</td></tr>"
+  html_output += "<tr><td>Key exchange</td><td>#{key_score.to_s}</td></tr>"
   html_output += "<tr><td>Cipher strength</td><td>#{cipher_score.to_s}</td></tr>"
   html_output += "</table>"
   html_output += "</body>"
