@@ -125,6 +125,20 @@ if (options[:json])
   exit 0
 end
 
+if (options[:html])
+  html_output = "<!doctype html><html><head><title>SSL evaluation for #{target}</title></head>"
+  html_output += "<body>"
+  html_output += "<table>"
+  html_output += "<tr><td>Overall evaluation</td><td>#{Ciphersurfer::Score.evaluate(score)}</td></tr>"
+  html_output += "<tr><td>Protocol support</td><td>#{proto_score.to_s}</td></tr>"
+  html_output += "<tr><td>Key exchange</td><td>#{ket_score.to_s}</td></tr>"
+  html_output += "<tr><td>Cipher strength</td><td>#{cipher_score.to_s}</td></tr>"
+  html_output += "</table>"
+  html_output += "</body>"
+  html_output += "</html>"
+  exit 0
+end
+
 printf "%20s : %s (%s)\n", "Overall evaluation", Ciphersurfer::Score.evaluate(score), score.to_s
 printf "%20s : ", "Protocol support" 
 proto_score.to_i.times{print 'o'.color(score_to_color(proto_score))}
