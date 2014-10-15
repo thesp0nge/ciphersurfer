@@ -20,11 +20,12 @@ opts = GetoptLong.new(
   [ '--help', '-h', GetoptLong::NO_ARGUMENT ],
   [ '--version', '-v', GetoptLong::NO_ARGUMENT ],
   [ '--list-ciphers', '-l', GetoptLong::NO_ARGUMENT ],
+  [ '--poodle-test', '-P', GetoptLong::NO_ARGUMENT ],
   [ '--json', '-j', GetoptLong::NO_ARGUMENT]
 )
 trap("INT") { puts '['+'INTERRUPTED'.color(:red)+']'; exit -1 }
 
-options={:json=>false,:list_ciphers=>false}
+options={:json=>false,:list_ciphers=>false, :poodle=>true}
 
 opts.each do |opt, arg|
   case opt
@@ -32,6 +33,7 @@ opts.each do |opt, arg|
     puts "usage: ciphersurfer [-ljvh] server[:port]"
     puts "       -l: lists supported ciphers instead of just evaluate the security level"
     puts "       -j: formats the output using JSON"
+    puts "       -P: checks if server supports SSLv3 protocol for the POODLE attack (https://www.openssl.org/~bodo/ssl-poodle.pdf)"
     puts "       -v: shows  version"
     puts "       -h: this help"
     exit 0
@@ -42,6 +44,8 @@ opts.each do |opt, arg|
     options[:json]=true
   when '--list-ciphers'
     options[:list_ciphers]=true
+  when '--poodle-test'
+    options[:poodle] = true
   end
 end
 
@@ -96,7 +100,10 @@ end
 cert= Ciphersurfer::Scanner.cert(host, port)
 if ! cert.nil?
   a=cert.public_key.to_text ||= ""
-  key_size=/Modulus \((\d+)/i.match(a)[1]
+  match_modulus=/Modulus \((\d+)/i.match(a)
+  key_size=match_modulus[1].to_i unless match_modulus.nil?
+  match_key=/Public-Key: \((\d+) bit\)/i.match(a)
+  key_size=match_key[1].to_i unless match_key.nil?
 else
   puts "warning: the server didn't give us the certificate".color(:yellow)
   key_size=0
@@ -114,6 +121,13 @@ if (options[:json])
   
   exit 0
 end
+if (options[:poodle])
+  supported_protocols.each do|s|
+    puts "[!] #{target} is vulnerable to POODLE attack. Please remove SSLv3 support" if s == :SSLv3
+    puts "[!] #{target} supports SSLv1 that is obsolete and insecure. Please remove SSLv2 support" if s == :SSLv2
+  end
+  exit 0
+end
 
 printf "%20s : %s (%s)\n", "Overall evaluation", Ciphersurfer::Score.evaluate(score), score.to_s
 printf "%20s : ", "Protocol support" 
@@ -125,4 +139,5 @@ puts ' ('+key_score.to_s+')'
 printf "%20s : ", "Cipher strength" 
 cipher_score.to_i.times{print 'o'.color(score_to_color(cipher_score))}
 puts ' ('+cipher_score.to_s+')'
+
 
