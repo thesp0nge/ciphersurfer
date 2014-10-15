@@ -45,7 +45,7 @@ opts.each do |opt, arg|
   when '--list-ciphers'
     options[:list_ciphers]=true
   when '--poodle-test'
-    options[:poodle] = true
+    options[:poodle]=true
   end
 end
 
@@ -64,6 +64,15 @@ end
 target = ARGV.shift
 host = target.split(':')[0] ||= "localhost"   #fallback here should never occur... however it's better to be paranoid
 port = target.split(':')[1] ||= 443           # more common here
+
+if (options[:poodle])
+  if Ciphersurfer::Scanner.poodle?(host, port)
+    puts "[!] #{target} is vulnerable to POODLE attack. Please remove SSLv3 support" 
+  else
+    puts "[*] #{target} does not support SSLv3" 
+  end
+  exit
+end
 
 puts "Evaluating secure communication with #{host}:#{port}"
 
@@ -121,13 +130,8 @@ if (options[:json])
   
   exit 0
 end
-if (options[:poodle])
-  supported_protocols.each do|s|
-    puts "[!] #{target} is vulnerable to POODLE attack. Please remove SSLv3 support" if s == :SSLv3
-    puts "[!] #{target} supports SSLv1 that is obsolete and insecure. Please remove SSLv2 support" if s == :SSLv2
-  end
-  exit 0
-end
+
+    # puts "[!] #{target} supports SSLv1 that is obsolete and insecure. Please remove SSLv2 support" if s == :SSLv2
 
 printf "%20s : %s (%s)\n", "Overall evaluation", Ciphersurfer::Score.evaluate(score), score.to_s
 printf "%20s : ", "Protocol support" 

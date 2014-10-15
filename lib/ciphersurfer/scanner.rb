@@ -83,7 +83,25 @@ module Ciphersurfer
     #     return false
     #   end
     # end
-   
+
+    def self.poodle?(host, port)
+      # context=OpenSSL::SSL::SSLContext.new(:SSLv3)
+      request = Net::HTTP.new(host, port)
+      request.use_ssl = true
+      request.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      request.ssl_version = :SSLv3
+      begin
+        response = request.get("/")
+        return true
+      rescue OpenSSL::SSL::SSLError => e
+        return false
+      rescue
+        return false
+      end
+
+
+    end
+
     def go
       context=OpenSSL::SSL::SSLContext.new(@proto)
       cipher_set = context.ciphers
