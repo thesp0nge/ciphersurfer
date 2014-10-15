@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = Ciphersurfer::VERSION
   spec.authors       = ["Paolo Perego"]
   spec.email         = ["thesp0nge@gmail.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
-  spec.homepage      = ""
+  spec.summary       = %q{ciphersurfer is a tool to check how strong is an SSL certificate. It also check for POODLE vulnerability, if your server supports SSLv3}
+  spec.description   = %q{ciphersurfer is a tool to check how strong is an SSL certificate. It also check for POODLE vulnerability, if your server supports SSLv3}
+  spec.homepage      = "https://codiceinsicuro.it"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
