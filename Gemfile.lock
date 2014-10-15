@@ -1,31 +1,21 @@
-GEM
-  remote: http://rubygems.org/
+PATH
+  remote: .
   specs:
-    diff-lcs (1.1.3)
-    git (1.2.5)
+    ciphersurfer (1.2.0)
+      httpclient
+      rainbow
+
+GEM
+  remote: https://rubygems.org/
+  specs:
     httpclient (2.2.4)
-    jeweler (1.6.4)
-      bundler (~> 1.0)
-      git (>= 1.2.5)
-      rake
-    json (1.6.5)
     rainbow (1.1.3)
     rake (0.9.2.2)
-    rspec (2.3.0)
-      rspec-core (~> 2.3.0)
-      rspec-expectations (~> 2.3.0)
-      rspec-mocks (~> 2.3.0)
-    rspec-core (2.3.1)
-    rspec-expectations (2.3.0)
-      diff-lcs (~> 1.1.2)
-    rspec-mocks (2.3.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  httpclient
-  jeweler (~> 1.6.4)
-  json
-  rainbow
-  rspec (~> 2.3.0)
+  bundler (~> 1.5)
+  ciphersurfer!
+  rake

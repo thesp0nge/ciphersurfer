@@ -1,16 +1,4 @@
-source "http://rubygems.org"
+source 'https://rubygems.org'
 
-gem 'rainbow'
-gem 'json'
-gem 'httpclient'
-
-# Add dependencies required to use your gem here.
-# Example:
-#   gem "activesupport", ">= 2.3.5"
-
-# Add dependencies to develop your gem here.
-# Include everything needed to run rake, tests, features, etc.
-group :development do
-  gem "rspec", "~> 2.3.0"
-  gem "jeweler", "~> 1.6.4"
-end
+# Specify your gem's dependencies in ciphersurfer.gemspec
+gemspec
