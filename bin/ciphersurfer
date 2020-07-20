@@ -23,7 +23,7 @@ opts = GetoptLong.new(
   [ '--poodle-test', '-P', GetoptLong::NO_ARGUMENT ],
   [ '--json', '-j', GetoptLong::NO_ARGUMENT]
 )
-trap("INT") { puts '['+'INTERRUPTED'.color(:red)+']'; exit -1 }
+trap("INT") { puts '['+'INTERRUPTED'+']'; exit -1 }
 
 options={:json=>false,:list_ciphers=>false, :poodle=>true}
 
@@ -50,7 +50,7 @@ opts.each do |opt, arg|
 end
 
 if ( ARGV.length != 1 )
-  puts 'missing target'.color(:red)
+  puts 'missing target'
 
   puts "usage: ciphersurfer [-ljvh] server[:port]"
   puts "       -l: lists supported ciphers instead of just evaluate the security level"
@@ -71,7 +71,6 @@ if (options[:poodle])
   else
     puts "[*] #{target} does not support SSLv3" 
   end
-  exit
 end
 
 puts "Evaluating secure communication with #{host}:#{port}"
@@ -88,20 +87,24 @@ ciphers=[]
 
 
 protocol_version.each do |version|
+  puts version
   s = Ciphersurfer::Scanner.new({:host=>host, :port=>port, :proto=>version})
 
+  begin
   s.go
   if (s.ok_ciphers.size != 0)
     supported_protocols << version
     cipher_bits = cipher_bits | s.ok_bits
     ciphers = ciphers | s.ok_ciphers
   end
-
+  rescue Exception => e
+    puts e.message
+  end
 end
 
 if (options[:list_ciphers])
   ciphers.each do |c|
-    puts "[+] accepted #{c}".color(:green)
+    puts "[+] accepted #{c}"
   end
   exit 0
 end
@@ -114,7 +117,7 @@ if ! cert.nil?
   match_key=/Public-Key: \((\d+) bit\)/i.match(a)
   key_size=match_key[1].to_i unless match_key.nil?
 else
-  puts "warning: the server didn't give us the certificate".color(:yellow)
+  puts "warning: the server didn't give us the certificate"
   key_size=0
 end
                    
@@ -135,13 +138,13 @@ end
 
 printf "%20s : %s (%s)\n", "Overall evaluation", Ciphersurfer::Score.evaluate(score), score.to_s
 printf "%20s : ", "Protocol support" 
-proto_score.to_i.times{print 'o'.color(score_to_color(proto_score))}
+#proto_score.to_i.times{print 'o'}
 puts ' ('+proto_score.to_s+')'
 printf "%20s : ",  "Key exchange" 
-key_score.to_i.times{print 'o'.color(score_to_color(key_score))}
+#key_score.to_i.times{print 'o'}
 puts ' ('+key_score.to_s+')'
 printf "%20s : ", "Cipher strength" 
-cipher_score.to_i.times{print 'o'.color(score_to_color(cipher_score))}
+#cipher_score.to_i.times{print 'o'}
 puts ' ('+cipher_score.to_s+')'
 
 

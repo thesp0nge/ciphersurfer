@@ -13,6 +13,8 @@ if (maj==1 and min==8)
       def set_context=(value)
         @ssl_context = OpenSSL::SSL::SSLContext.new
         @ssl_context &&= OpenSSL::SSL::SSLContext.new(value)
+        @ssl_context.min_version=OpenSSL::SSL::SSLv2
+        @ssl_context.max_version=OpenSSL::SSL::TLS1_2_VERSION
       end
       ssl_context_accessor :ciphers
     end
@@ -56,13 +58,13 @@ module Ciphersurfer
         @peer_cert = response.peer_cert
         return true
       rescue Errno::ECONNREFUSED => e
-        puts "alive?(): connection refused".color(:red)
+        puts "alive?(): connection refused"
         return false
       rescue OpenSSL::SSL::SSLError => e
-        puts "alive?(): [WARNING] - #{e.message}".color(:yellow)
+        puts "alive?(): [WARNING] - #{e.message}"
         return true
       rescue => e
-        puts "alive?(): #{e.message}".color(:red)
+        puts "alive?(): #{e.message}"
         return false
       end
       
@@ -103,7 +105,9 @@ module Ciphersurfer
     end
 
     def go
-      context=OpenSSL::SSL::SSLContext.new(@proto)
+      context=OpenSSL::SSL::SSLContext.new
+      context.min_version=@proto # OpenSSL::SSL::SSL3_VERSION
+      context.max_version=@proto #OpenSSL::SSL::TLS1_2_VERSION
       cipher_set = context.ciphers
       cipher_set.each do |cipher_name, cipher_version, bits, algorithm_bits|
 
